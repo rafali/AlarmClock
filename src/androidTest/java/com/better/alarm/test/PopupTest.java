@@ -181,12 +181,14 @@ public class PopupTest extends BaseTest {
     public void snoozeViaDoulbelick() {
         int id = createAlarmAndFire();
 
+        sleep();
         Intent startIntent = new Intent();
         startIntent.putExtra(Intents.EXTRA_ID, id);
         alertActivity.launchActivity(startIntent);
 
         sleep();
-        Cortado.onView().withText("Snooze").perform().doubleClick();
+        Cortado.onView().withText("Snooze").perform().click();
+        Cortado.onView().withText("Snooze").perform().click();
         sleep();
         sleep();
         sleep();
