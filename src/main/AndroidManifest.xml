@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.better.alarm"
+    package="com.rafali.alarm"
     android:versionCode="2907"
     android:versionName="2.9.07" >
 
@@ -18,17 +18,17 @@
     <uses-permission android:name="com.android.alarm.permission.SET_ALARM"/>
 
     <application
-        android:name=".configuration.AlarmApplication"
+        android:name="com.rafali.alarm.configuration.AlarmApplication"
         android:icon="@mipmap/ic_launcher_alarmclock"
-        android:label="@string/simple_alarm_clock" >
+        android:label="Cast Alarm" >
 
         <!-- Activity to set a new or modify existing alarm -->
         <activity
-            android:name=".presenter.AlarmsListActivity"
+            android:name="com.rafali.alarm.presenter.AlarmsListActivity"
             android:configChanges="orientation|keyboardHidden|keyboard|navigation"
             android:launchMode="singleInstance"
             android:exported="true"
-            android:label="@string/alarm_list_title"
+            android:label="Cast Alarm"
             android:taskAffinity="">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -40,7 +40,7 @@
 
         <!-- Application Settings -->
         <activity
-            android:name=".presenter.SettingsActivity"
+            android:name="com.rafali.alarm.presenter.SettingsActivity"
             android:autoRemoveFromRecents="true"
             android:excludeFromRecents="true"
             android:label="@string/settings"
@@ -51,7 +51,7 @@
         </activity>
 
         <activity
-            android:name=".presenter.HandleSetAlarm"
+            android:name="com.rafali.alarm.presenter.HandleSetAlarm"
             android:excludeFromRecents="true"
             android:permission="com.android.alarm.permission.SET_ALARM"
             android:theme="@android:style/Theme.NoDisplay" >
@@ -62,7 +62,7 @@
         </activity>
         <!-- Forwards intents to the AlarmAlertFullScreen -->
         <receiver
-            android:name=".alert.AlarmAlertReceiver"
+            android:name="com.rafali.alarm.alert.AlarmAlertReceiver"
             android:exported="false" >
             <intent-filter>
                 <action android:name="${applicationId}.ALARM_ALERT" />
@@ -79,7 +79,7 @@
         <!-- This activity is basically the same as AlarmAlert
              but full-screen so that it can turn the display on. -->
         <activity
-            android:name=".alert.AlarmAlertFullScreen"
+            android:name="com.rafali.alarm.alert.AlarmAlertFullScreen"
             android:configChanges="orientation|keyboardHidden|keyboard|navigation"
             android:excludeFromRecents="true"
             android:launchMode="singleInstance"
@@ -87,7 +87,7 @@
 
         <!-- Transparent activity with TimPickerFragment -->
        <activity
-            android:name=".presenter.TransparentActivity"
+            android:name="com.rafali.alarm.presenter.TransparentActivity"
             android:configChanges="orientation|keyboardHidden|keyboard|navigation"
             android:excludeFromRecents="true"
             android:launchMode="singleInstance"
@@ -96,7 +96,7 @@
 
         <!-- KlaxonPresenter plays sound -->
         <receiver
-            android:name=".background.KlaxonService$Receiver"
+            android:name="com.rafali.alarm.background.KlaxonService$Receiver"
             android:exported="false" >
             <intent-filter>
                 <action android:name="${applicationId}.ALARM_ALERT" />
@@ -113,14 +113,14 @@
             </intent-filter>
         </receiver>
         <service
-            android:name=".background.KlaxonService"
+            android:name="com.rafali.alarm.background.KlaxonService"
             android:description="@string/alarm_klaxon_service_desc"
             android:exported="false" >
         </service>
 
         <!-- VibrationPresenter vibrates -->
         <receiver
-            android:name=".background.VibrationService$Receiver"
+            android:name="com.rafali.alarm.background.VibrationService$Receiver"
             android:exported="false" >
             <intent-filter>
                 <action android:name="${applicationId}.ALARM_ALERT" />
@@ -132,14 +132,14 @@
             </intent-filter>
         </receiver>
         <service
-            android:name=".background.VibrationService"
+            android:name="com.rafali.alarm.background.VibrationService"
             android:description="@string/alarm_klaxon_service_desc"
             android:exported="false" >
         </service>
 
         <!-- Model -->
         <receiver
-            android:name=".services.AlarmsService$Receiver"
+            android:name="com.rafali.alarm.services.AlarmsService$Receiver"
             android:exported="false" >
             <intent-filter>
                 <action android:name="${applicationId}.ACTION_FIRED" />
@@ -152,12 +152,12 @@
             </intent-filter>
         </receiver>
         <service
-            android:name=".services.AlarmsService"
+            android:name="com.rafali.alarm.services.AlarmsService"
             android:exported="false" >
         </service>
         <!-- Persistence -->
         <provider
-            android:name=".persistance.AlarmProvider"
+            android:name="com.rafali.alarm.persistance.AlarmProvider"
             android:authorities="${applicationId}.model"
             android:exported="false" />
     </application>

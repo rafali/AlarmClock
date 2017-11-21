@@ -18,7 +18,7 @@
     <PreferenceCategory
         android:key="preference_category_sound_key"
         android:title="@string/preference_category_sound">
-        <com.better.alarm.view.VolumePreference
+        <com.rafali.alarm.view.VolumePreference
             android:dialogTitle="@string/alarm_volume_title"
             android:persistent="false"
             android:summary="@string/alarm_volume_summary"

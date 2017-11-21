@@ -60,7 +60,7 @@
 
         <fragment
             android:id="@+id/list_activity_info_fragment"
-            android:name="com.better.alarm.presenter.InfoFragment"
+            android:name="com.rafali.alarm.presenter.InfoFragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             tools:layout="@layout/info_fragment" />

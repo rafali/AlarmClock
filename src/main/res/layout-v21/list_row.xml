@@ -34,7 +34,7 @@
             android:text="label"
             android:textColor="?android:attr/colorAccent" />
 
-        <com.better.alarm.view.DigitalClock
+        <com.rafali.alarm.view.DigitalClock
             android:id="@+id/list_row_digital_clock"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -53,7 +53,7 @@
                 android:id="@+id/digital_clock_am_pm"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
-        </com.better.alarm.view.DigitalClock>
+        </com.rafali.alarm.view.DigitalClock>
 
         <TextView
             android:id="@+id/list_row_daysOfWeek"
@@ -72,7 +72,7 @@
         android:orientation="vertical"
         android:paddingTop="10dp">
 
-        <com.better.alarm.view.DontPressWithParentLayout
+        <com.rafali.alarm.view.DontPressWithParentLayout
             android:id="@+id/list_row_on_off_checkbox_container"
             android:layout_width="match_parent"
             android:layout_height="0dp"
@@ -95,7 +95,7 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1" />
-        </com.better.alarm.view.DontPressWithParentLayout>
+        </com.rafali.alarm.view.DontPressWithParentLayout>
 
         <LinearLayout
             android:id="@+id/details_button_container"

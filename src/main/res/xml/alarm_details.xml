@@ -16,7 +16,7 @@
 
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
         android:title="@string/set_alarm">
-    <com.better.alarm.view.RepeatPreference
+    <com.rafali.alarm.view.RepeatPreference
         android:key="setRepeat"
         android:title="@string/alarm_repeat" />
     <RingtonePreference

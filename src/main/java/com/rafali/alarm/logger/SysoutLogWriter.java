@@ -1,0 +1,23 @@
+package com.rafali.alarm.logger;
+
+import com.rafali.alarm.logger.Logger.LogLevel;
+
+public class SysoutLogWriter implements Logger.LogWriter {
+    @Override
+    public void write(LogLevel level, String tag, String message, Throwable e) {
+        switch (level) {
+            case INF:
+            case DBG:
+                System.out.println(tag + ", " + message);
+                if (e != null) e.printStackTrace();
+                break;
+
+            case WRN:
+            case ERR:
+            default:
+                System.err.println(tag + ", " + message);
+                if (e != null) e.printStackTrace();
+                break;
+        }
+    }
+}
