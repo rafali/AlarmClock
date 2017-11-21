@@ -27,6 +27,7 @@ import android.preference.RingtonePreference
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.EditText
 import com.rafali.alarm.R
 import com.rafali.alarm.configuration.AlarmApplication.container
@@ -62,7 +63,7 @@ class AlarmDetailsFragment : PreferenceFragment {
     private var disposableDialog = Disposables.disposed()
 
     private val store: UiStore by lazy { AlarmsListActivity.uiStore(this) }
-    private val mLabel: EditText by lazy { fragmentView.findViewById(R.id.details_label) as EditText }
+    private val mLabel: EditText by lazy { fragmentView.findViewById<EditText>(R.id.details_label) }
     private val rowHolder: RowHolder by lazy { RowHolder(fragmentView, alarmId) }
     private val mAlarmPref: RingtonePreference by lazy { findPreference("alarm_ringtone") as RingtonePreference }
     private val mRepeatPref: RepeatPreference by lazy { findPreference("setRepeat") as RepeatPreference }
@@ -124,8 +125,8 @@ class AlarmDetailsFragment : PreferenceFragment {
                     rowHolder.onOff().isChecked = editor.isEnabled
                 })
 
-        view.findViewById(R.id.details_activity_button_save).setOnClickListener { saveAlarm() }
-        view.findViewById(R.id.details_activity_button_revert).setOnClickListener { revert() }
+        view.findViewById<Button>(R.id.details_activity_button_save).setOnClickListener { saveAlarm() }
+        view.findViewById<Button>(R.id.details_activity_button_revert).setOnClickListener { revert() }
 
         if (isNewAlarm) {
             disposableDialog = TimePickerDialogFragment.showTimePicker(fragmentManager)

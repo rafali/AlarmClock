@@ -33,6 +33,8 @@ import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.google.android.gms.cast.framework.CastButtonFactory;
+import com.google.android.gms.cast.framework.CastContext;
 import com.rafali.alarm.R;
 import com.rafali.alarm.configuration.EditedAlarm;
 import com.rafali.alarm.configuration.ImmutableEditedAlarm;
@@ -90,7 +92,10 @@ public class AlarmsListActivity extends AppCompatActivity {
             //jump directly to editor
             store.edit(getIntent().getIntExtra(Intents.EXTRA_ID, -1));
         }
+        CastContext castContext = CastContext.getSharedInstance(this);
+
     }
+
 
     @Override
     protected void onStart() {
@@ -115,7 +120,11 @@ public class AlarmsListActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        return mActionBarHandler.onCreateOptionsMenu(menu, getMenuInflater(), getSupportActionBar());
+        boolean s = mActionBarHandler.onCreateOptionsMenu(menu, getMenuInflater(), getSupportActionBar());
+        CastButtonFactory.setUpMediaRouteButton(getApplicationContext(),
+                menu,
+                R.id.media_route_menu_item);
+        return s;
     }
 
     @Override

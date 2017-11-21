@@ -19,6 +19,12 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
+        android:id="@+id/media_route_menu_item"
+        android:title="CAST"
+        app:actionProviderClass="android.support.v7.app.MediaRouteActionProvider"
+        app:showAsAction="always" />
+
+    <item
         android:id="@+id/set_alarm_menu_delete_alarm"
         android:icon="@android:drawable/ic_menu_delete"
         app:showAsAction="ifRoom|withText"

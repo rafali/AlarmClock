@@ -26,7 +26,11 @@ import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.os.Handler;
 import android.preference.PreferenceManager;
+import android.support.v7.media.MediaRouteSelector;
+import android.support.v7.media.MediaRouter;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
@@ -34,13 +38,25 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.google.android.gms.cast.CastMediaControlIntent;
+import com.google.android.gms.cast.MediaInfo;
+import com.google.android.gms.cast.MediaLoadOptions;
+import com.google.android.gms.cast.MediaMetadata;
+import com.google.android.gms.cast.framework.CastContext;
+import com.google.android.gms.cast.framework.CastState;
+import com.google.android.gms.cast.framework.CastStateListener;
+import com.google.android.gms.cast.framework.SessionManager;
+import com.google.android.gms.cast.framework.media.RemoteMediaClient;
+import com.google.common.base.Optional;
 import com.rafali.alarm.R;
 import com.rafali.alarm.interfaces.Alarm;
 import com.rafali.alarm.interfaces.IAlarmsManager;
 import com.rafali.alarm.interfaces.Intents;
 import com.rafali.alarm.logger.Logger;
 import com.rafali.alarm.presenter.TimePickerDialogFragment;
-import com.google.common.base.Optional;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.Disposable;
@@ -126,6 +142,49 @@ public class AlarmAlertFullScreen extends Activity {
         } catch (Exception e) {
             Logger.getDefaultLogger().d("Alarm not found");
         }
+
+        CastContext castContext = CastContext.getSharedInstance(this);
+        castContext.addCastStateListener(new CastStateListener() {
+            @Override
+            public void onCastStateChanged(int newState) {
+                Log.i("Alarm", "newState : " + CastState.toString(newState));
+                if (newState == CastState.CONNECTED) {
+                    try {
+                        String url = "http://stream-tx4.radioparadise.com:80/mp3-128";
+                        MediaMetadata metadata = new MediaMetadata(MediaMetadata.MEDIA_TYPE_MUSIC_TRACK);
+                        metadata.putString(MediaMetadata.KEY_TITLE, "Radio Paradise");
+                        MediaInfo mediaInfo = new MediaInfo.Builder(url)
+                                .setStreamType(MediaInfo.STREAM_TYPE_BUFFERED)
+                                .setContentType("audio/mp3")
+                                .setMetadata(metadata)
+                                .build();
+                        SessionManager mSessionManager = CastContext.getSharedInstance(AlarmAlertFullScreen.this).getSessionManager();
+                        final RemoteMediaClient remoteMediaClient = mSessionManager.getCurrentCastSession().getRemoteMediaClient();
+                        MediaLoadOptions options = new MediaLoadOptions.Builder().setAutoplay(true).build();
+                        remoteMediaClient.load(mediaInfo, options);
+                        remoteMediaClient.setStreamVolume(0);
+                        Handler handler1 = new Handler();
+                        for (int a = 1; a <= 10; a++) {
+                            final double volume = a * 0.5 / 10;
+                            handler1.postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Log.i("Alarm", "setting volume to " + volume);
+                                    remoteMediaClient.setStreamVolume(volume);
+                                }
+                            }, 20_000 * a);
+                        }
+
+
+                        Log.i("Alarm", "played " + url);
+                    } catch (Exception e) {
+                        Log.e("Alarm", e.toString());
+                    }
+
+
+                }
+            }
+        });
     }
 
     private void setTitle() {
@@ -256,10 +315,46 @@ public class AlarmAlertFullScreen extends Activity {
         longClickToDismiss = PreferenceManager.getDefaultSharedPreferences(this).getBoolean(LONGCLICK_DISMISS_KEY,
                 LONGCLICK_DISMISS_DEFAULT);
 
-        Button snooze = (Button) findViewById(R.id.alert_button_snooze);
+        Button snooze = findViewById(R.id.alert_button_snooze);
         View snoozeText = findViewById(R.id.alert_text_snooze);
         snooze.setEnabled(isSnoozeEnabled());
         snoozeText.setEnabled(isSnoozeEnabled());
+
+        MediaRouter mMediaRouter = MediaRouter.getInstance(this);
+        MediaRouteSelector mMediaRouteSelector = new MediaRouteSelector.Builder().addControlCategory(CastMediaControlIntent.categoryForCast(getString(R.string.app_id)))
+                .build();
+
+        Log.i("Alarm", "scanning CAST devices");
+        mMediaRouter.addCallback(mMediaRouteSelector, new MediaRouterCallback(),
+                MediaRouter.CALLBACK_FLAG_REQUEST_DISCOVERY);
+    }
+
+    class MediaRouterCallback extends MediaRouter.Callback {
+        @Override
+        public void onRouteSelected(MediaRouter router, MediaRouter.RouteInfo route) {
+            super.onRouteSelected(router, route);
+            Log.i("Alarm", "onRouteSelected: " + route);
+        }
+
+        @Override
+        public void onRouteAdded(MediaRouter router, MediaRouter.RouteInfo route) {
+            super.onRouteAdded(router, route);
+            Log.i("Alarm", "onRouteAdded: " + route.getName() + ", " + route.getId());
+            if (route.getName().equals("Kitchen")) {
+                selectRoute(route);
+            }
+        }
+    }
+
+    Map<String, Long> lastSelection = new HashMap<>();
+
+    void selectRoute(MediaRouter.RouteInfo route) {
+        Long last = lastSelection.get(route.getId());
+        if (last == null || System.currentTimeMillis() - last > 5000) {
+            MediaRouter mediaRouter = MediaRouter.getInstance(this);
+            mediaRouter.selectRoute(route);
+            lastSelection.put(route.getId(), System.currentTimeMillis());
+        }
     }
 
     @Override
