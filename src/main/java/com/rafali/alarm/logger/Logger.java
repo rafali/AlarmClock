@@ -46,6 +46,10 @@ public class Logger {
         logIfApplicable(LogLevel.DBG, message, null);
     }
 
+    public void i(Object message) {
+        logIfApplicable(LogLevel.INF, message, null);
+    }
+
     public void w(Object message) {
         logIfApplicable(LogLevel.WRN, message, null);
     }

@@ -29,10 +29,12 @@ import android.transition.Fade;
 import android.transition.Slide;
 import android.transition.Transition;
 import android.transition.TransitionInflater;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.bugfender.sdk.Bugfender;
 import com.google.android.gms.cast.framework.CastButtonFactory;
 import com.google.android.gms.cast.framework.CastContext;
 import com.rafali.alarm.R;
@@ -93,7 +95,8 @@ public class AlarmsListActivity extends AppCompatActivity {
             store.edit(getIntent().getIntExtra(Intents.EXTRA_ID, -1));
         }
         CastContext castContext = CastContext.getSharedInstance(this);
-
+        Bugfender.i("Alarm", "castContext : " + castContext);
+        Log.i("Alarm", "this is a normal logcat");
     }
 
 

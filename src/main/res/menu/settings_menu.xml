@@ -35,11 +35,6 @@
         app:showAsAction="never"
         android:title="@string/settings"/>
     <item
-        android:id="@+id/menu_bugreport"
-        android:icon="@android:drawable/ic_menu_send"
-        app:showAsAction="never"
-        android:title="@string/bugreport"/>
-    <item
         android:id="@+id/menu_review"
         android:icon="@android:drawable/ic_menu_edit"
         app:showAsAction="never"

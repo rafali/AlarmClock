@@ -18,7 +18,6 @@ import com.rafali.alarm.configuration.EditedAlarm;
 import com.rafali.alarm.interfaces.IAlarmsManager;
 import com.google.common.base.Preconditions;
 
-import org.acra.ACRA;
 
 import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.Disposable;
@@ -109,9 +108,6 @@ public class ActionBarHandler {
                 showReview();
                 return true;
 
-            case R.id.menu_bugreport:
-                showBugreport();
-                return true;
 
             case R.id.menu_dashclock:
                 showDashClock();
@@ -208,24 +204,4 @@ public class ActionBarHandler {
         builder.create().show();
     }
 
-    private void showBugreport() {
-        final EditText report = new EditText(mContext);
-        report.setHint(R.string.bugreport_hint);
-        AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-        builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                ACRA.getErrorReporter().handleSilentException(new Exception(report.getText().toString()));
-            }
-        });
-        builder.setTitle(R.string.bugreport);
-        builder.setCancelable(true);
-        builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-            }
-        });
-        builder.setView(report);
-        builder.create().show();
-    }
 }

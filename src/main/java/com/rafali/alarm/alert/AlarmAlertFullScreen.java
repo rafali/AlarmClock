@@ -43,6 +43,7 @@ import com.google.android.gms.cast.MediaInfo;
 import com.google.android.gms.cast.MediaLoadOptions;
 import com.google.android.gms.cast.MediaMetadata;
 import com.google.android.gms.cast.framework.CastContext;
+import com.google.android.gms.cast.framework.CastSession;
 import com.google.android.gms.cast.framework.CastState;
 import com.google.android.gms.cast.framework.CastStateListener;
 import com.google.android.gms.cast.framework.SessionManager;
@@ -55,6 +56,7 @@ import com.rafali.alarm.interfaces.Intents;
 import com.rafali.alarm.logger.Logger;
 import com.rafali.alarm.presenter.TimePickerDialogFragment;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -159,20 +161,29 @@ public class AlarmAlertFullScreen extends Activity {
                                 .setMetadata(metadata)
                                 .build();
                         SessionManager mSessionManager = CastContext.getSharedInstance(AlarmAlertFullScreen.this).getSessionManager();
-                        final RemoteMediaClient remoteMediaClient = mSessionManager.getCurrentCastSession().getRemoteMediaClient();
+                        final CastSession castSession = mSessionManager.getCurrentCastSession();
+                        RemoteMediaClient remoteMediaClient = castSession.getRemoteMediaClient();
                         MediaLoadOptions options = new MediaLoadOptions.Builder().setAutoplay(true).build();
+                        castSession.setVolume(0.01);
                         remoteMediaClient.load(mediaInfo, options);
-                        remoteMediaClient.setStreamVolume(0);
                         Handler handler1 = new Handler();
-                        for (int a = 1; a <= 10; a++) {
-                            final double volume = a * 0.5 / 10;
+                        int fading_duration = 60_000;
+                        int interval = 5_000;
+                        int steps = fading_duration / interval;
+                        double max_volume = 0.25;
+                        for (int a = 1; a <= steps; a++) {
+                            final double volume = a * max_volume / steps;
                             handler1.postDelayed(new Runnable() {
                                 @Override
                                 public void run() {
                                     Log.i("Alarm", "setting volume to " + volume);
-                                    remoteMediaClient.setStreamVolume(volume);
+                                    try {
+                                        castSession.setVolume(volume);
+                                    } catch (IOException e) {
+                                        Log.e("Alarm", e.toString());
+                                    }
                                 }
-                            }, 20_000 * a);
+                            }, interval * a);
                         }
 
 
@@ -340,7 +351,7 @@ public class AlarmAlertFullScreen extends Activity {
         public void onRouteAdded(MediaRouter router, MediaRouter.RouteInfo route) {
             super.onRouteAdded(router, route);
             Log.i("Alarm", "onRouteAdded: " + route.getName() + ", " + route.getId());
-            if (route.getName().equals("Kitchen")) {
+            if (route.getName().equals("Bathroom")) {
                 selectRoute(route);
             }
         }

@@ -24,6 +24,8 @@ import android.net.Uri;
 import android.preference.PreferenceManager;
 import android.view.ViewConfiguration;
 
+import com.bugfender.sdk.Bugfender;
+import com.rafali.alarm.BuildConfig;
 import com.rafali.alarm.R;
 import com.rafali.alarm.background.ScheduledReceiver;
 import com.rafali.alarm.background.ToastPresenter;
@@ -48,12 +50,6 @@ import com.f2prateek.rx.preferences2.Preference;
 import com.f2prateek.rx.preferences2.RxSharedPreferences;
 import com.google.common.base.Optional;
 
-import org.acra.ACRA;
-import org.acra.ErrorReporter;
-import org.acra.ExceptionHandlerInitializer;
-import org.acra.ReportField;
-import org.acra.annotation.ReportsCrashes;
-
 import java.io.File;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -70,18 +66,6 @@ import io.reactivex.functions.Function;
 import io.reactivex.subjects.BehaviorSubject;
 import io.reactivex.subjects.PublishSubject;
 
-@ReportsCrashes(
-        mailTo = "yuriy.kulikov.87@gmail.com",
-        applicationLogFileLines = 150,
-        customReportContent = {
-                ReportField.IS_SILENT,
-                ReportField.APP_VERSION_CODE,
-                ReportField.PHONE_MODEL,
-                ReportField.ANDROID_VERSION,
-                ReportField.CUSTOM_DATA,
-                ReportField.STACK_TRACE,
-                ReportField.SHARED_PREFERENCES,
-        })
 public class AlarmApplication extends Application {
     private static Container sContainer;
     private static DynamicThemeHandler sThemeHandler;
@@ -93,7 +77,6 @@ public class AlarmApplication extends Application {
     @Override
     public void onCreate() {
         // The following line triggers the initialization of ACRA
-        ACRA.init(this);
         sThemeHandler = new DynamicThemeHandler(this);
         setTheme(sThemeHandler.defaultTheme());
 
@@ -108,10 +91,10 @@ public class AlarmApplication extends Application {
             // Ignore
         }
 
-        final StartupLogWriter startupLogWriter = StartupLogWriter.create();
+//        final StartupLogWriter startupLogWriter = StartupLogWriter.create();
         final Logger logger = Logger.create();
         logger.addLogWriter(LogcatLogWriter.create());
-        logger.addLogWriter(startupLogWriter);
+//        logger.addLogWriter(startupLogWriter);
 
         LoggingExceptionHandler.addLoggingExceptionHandlerToAllThreads(logger);
 
@@ -174,12 +157,12 @@ public class AlarmApplication extends Application {
             }
         });
 
-        ACRA.getErrorReporter().setExceptionHandlerInitializer(new ExceptionHandlerInitializer() {
-            @Override
-            public void initializeExceptionHandler(ErrorReporter reporter) {
-                reporter.putCustomData("STARTUP_LOG", startupLogWriter.getMessagesAsString());
-            }
-        });
+//        ACRA.getErrorReporter().setExceptionHandlerInitializer(new ExceptionHandlerInitializer() {
+//            @Override
+//            public void initializeExceptionHandler(ErrorReporter reporter) {
+//                reporter.putCustomData("STARTUP_LOG", startupLogWriter.getMessagesAsString());
+//            }
+//        });
 
         PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
 
@@ -237,6 +220,11 @@ public class AlarmApplication extends Application {
         new ToastPresenter(store, getApplicationContext()).start();
 
         logger.d("onCreate done");
+
+        Bugfender.init(this, "2QMIpP5zjemeLOZHBbTMAPL6fZOWfO4r", BuildConfig.DEBUG);
+        Bugfender.enableLogcatLogging();
+        Bugfender.enableUIEventLogging(this);
+
         super.onCreate();
     }
 

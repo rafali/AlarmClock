@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "865901370770",
+    "firebase_url": "https://alarm-cast-15b5a.firebaseio.com",
+    "project_id": "alarm-cast-15b5a",
+    "storage_bucket": "alarm-cast-15b5a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:865901370770:android:dbfbf40fae6610a4",
+        "android_client_info": {
+          "package_name": "com.rafali.alarm"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "865901370770-ctc5v10081s2pduetcc0o3m7kgugct0n.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.rafali.alarm",
+            "certificate_hash": "f4bf5e3f20ceb545f10063a5db8d6b5af2773e73"
+          }
+        },
+        {
+          "client_id": "865901370770-bgeuknck7uert5b5fmob7205g9n64dn4.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAS0c16-ok5o2g-HEOkYZZo9-O_BZFLjvo"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "865901370770-bgeuknck7uert5b5fmob7205g9n64dn4.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
