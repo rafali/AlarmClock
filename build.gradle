@@ -3,6 +3,10 @@ buildscript {
     repositories {
         jcenter()
         mavenCentral()
+        maven {
+            url 'https://maven.fabric.io/public'
+        }
+
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:2.3.3'
@@ -13,6 +17,8 @@ buildscript {
 
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.1.3"
         classpath 'com.google.gms:google-services:3.1.0'
+        classpath 'io.fabric.tools:gradle:1.24.4'
+
     }
 }
 
@@ -28,6 +34,7 @@ apply plugin: "android-apt"
 apply plugin: 'kotlin-kapt'
 //apply plugin: 'com.f2prateek.javafmt'
 apply plugin: 'jacoco-android'
+apply plugin: 'io.fabric'
 
 android {
     compileSdkVersion 26
@@ -79,6 +86,7 @@ repositories {
     maven {
         url "https://maven.google.com"
     }
+    maven { url 'https://maven.fabric.io/public' }
 }
 
 dependencies {
@@ -86,7 +94,6 @@ dependencies {
     compile "org.jetbrains.kotlin:kotlin-stdlib:1.1.3"
     compile 'com.google.guava:guava:19.0'
     compile 'com.android.support:support-annotations:26.1.0'
-    compile 'com.google.firebase:firebase-crash:11.6.0'
     compile 'com.bugfender.sdk:android:0.+'
     compile "org.jetbrains.anko:anko:$anko_version"
     compile 'com.google.android.gms:play-services-cast-framework:11.6.0'
@@ -97,7 +104,10 @@ dependencies {
     compile 'io.reactivex.rxjava2:rxandroid:2.0.1'
     compile 'com.f2prateek.rx.preferences2:rx-preferences:2.0.0-RC2'
     compile 'io.reactivex.rxjava2:rxandroid:2.0.1'
-
+    compile('com.crashlytics.sdk.android:crashlytics:2.7.1@aar') {
+        transitive = true
+    }
+    compile 'com.google.firebase:firebase-core:11.6.0'
     //apt
     kapt "org.immutables:value:2.5.5" // <-- for annotation processor
     provided "org.immutables:value:2.5.5" // <-- for annotation API

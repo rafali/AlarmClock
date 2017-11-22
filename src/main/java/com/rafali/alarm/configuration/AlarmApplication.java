@@ -25,6 +25,7 @@ import android.preference.PreferenceManager;
 import android.view.ViewConfiguration;
 
 import com.bugfender.sdk.Bugfender;
+import com.crashlytics.android.Crashlytics;
 import com.rafali.alarm.BuildConfig;
 import com.rafali.alarm.R;
 import com.rafali.alarm.background.ScheduledReceiver;
@@ -56,6 +57,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import io.fabric.sdk.android.Fabric;
 import io.reactivex.Maybe;
 import io.reactivex.MaybeEmitter;
 import io.reactivex.MaybeOnSubscribe;
@@ -76,7 +78,8 @@ public class AlarmApplication extends Application {
 
     @Override
     public void onCreate() {
-        // The following line triggers the initialization of ACRA
+        Fabric.with(this, new Crashlytics());
+
         sThemeHandler = new DynamicThemeHandler(this);
         setTheme(sThemeHandler.defaultTheme());
 
@@ -96,7 +99,7 @@ public class AlarmApplication extends Application {
         logger.addLogWriter(LogcatLogWriter.create());
 //        logger.addLogWriter(startupLogWriter);
 
-        LoggingExceptionHandler.addLoggingExceptionHandlerToAllThreads(logger);
+//        LoggingExceptionHandler.addLoggingExceptionHandlerToAllThreads(logger);
 
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
         rxPreferences = RxSharedPreferences.create(preferences);
