@@ -331,14 +331,21 @@ public class AlarmAlertFullScreen extends Activity {
         snooze.setEnabled(isSnoozeEnabled());
         snoozeText.setEnabled(isSnoozeEnabled());
 
-        MediaRouter mMediaRouter = MediaRouter.getInstance(this);
-        MediaRouteSelector mMediaRouteSelector = new MediaRouteSelector.Builder().addControlCategory(CastMediaControlIntent.categoryForCast(getString(R.string.app_id)))
-                .build();
+        if (mMediaRouterCallback == null) {
+            mMediaRouterCallback = new MediaRouterCallback();
+            mMediaRouteSelector = new MediaRouteSelector.Builder().
+                    addControlCategory(CastMediaControlIntent.categoryForCast(getString(R.string.app_id)))
+                    .build();
+        }
 
-        Log.i("Alarm", "scanning CAST devices");
-        mMediaRouter.addCallback(mMediaRouteSelector, new MediaRouterCallback(),
-                MediaRouter.CALLBACK_FLAG_REQUEST_DISCOVERY);
+
+        Log.i("Alarm", "onResume: scanning CAST devices");
+        MediaRouter mMediaRouter = MediaRouter.getInstance(this);
+        mMediaRouter.addCallback(mMediaRouteSelector, mMediaRouterCallback, MediaRouter.CALLBACK_FLAG_REQUEST_DISCOVERY);
     }
+
+    MediaRouterCallback mMediaRouterCallback = null;
+    MediaRouteSelector mMediaRouteSelector = null;
 
     class MediaRouterCallback extends MediaRouter.Callback {
         @Override
